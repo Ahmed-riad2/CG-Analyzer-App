@@ -1,0 +1,244 @@
+ScreenManager:
+    LoginScreen:
+    SignUpScreen:
+    CalcScreen:
+    AdminScreen:
+
+<LoginScreen>:
+    name: 'login'
+    canvas.before:
+        Color:
+            rgba: (1, 0.75, 0.8, 1)  # Light Pink Background
+        Rectangle:
+            pos: self.pos
+            size: self.size
+        Color:
+            rgba: (0.6, 0.2, 0.4, 0.3)
+        Ellipse:
+            pos: self.width - 150, self.height - 150
+            size: 300, 300
+
+    MDCard:
+        size_hint: .85, .65
+        pos_hint: {"center_x": .5, "center_y": .5}
+        padding: "25dp"
+        orientation: 'vertical'
+        spacing: "15dp"
+        radius: [25, ]
+        md_bg_color: 1, 1, 1, 0.4  # Blur Glass Effect
+        elevation: 0
+        line_color: (1, 1, 1, 0.6)
+        line_width: 1.5
+
+        MDLabel:
+            text: "Engineer Login"
+            halign: "center"
+            font_style: "H5"
+            theme_text_color: "Custom"
+            text_color: (0.8, 0.1, 0.4, 1)
+            bold: True
+
+        MDTextField:
+            id: user
+            hint_text: "Username"
+            mode: "fill"
+            fill_color_normal: 1, 1, 1, 0.3
+            text_color_normal: (0, 0, 0, 1)
+
+        MDTextField:
+            id: password
+            hint_text: "Password"
+            password: True
+            mode: "fill"
+            fill_color_normal: 1, 1, 1, 0.3
+
+        MDRaisedButton:
+            text: "LOGIN"
+            size_hint_x: 1
+            md_bg_color: (0.8, 0.1, 0.4, 1)
+            on_release: root.authenticate()
+
+        MDTextButton:
+            text: "Create New Account"
+            pos_hint: {"center_x": .5}
+            theme_text_color: "Custom"
+            text_color: (0.8, 0.1, 0.4, 1)
+            on_release: root.manager.current = 'signup'
+
+<CalcScreen>:
+    name: 'calc'
+    canvas.before:
+        Color:
+            rgba: (0.98, 0.95, 0.98, 1)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    MDBoxLayout:
+        orientation: 'vertical'
+        
+        MDTopAppBar:
+            title: "CG Analyzer"
+            md_bg_color: (0.8, 0.1, 0.4, 1)
+            right_action_items: [["account-cog", lambda x: root.check_admin()]]
+            left_action_items: [["logout", lambda x: root.logout()]]
+
+        ScrollView:
+            MDBoxLayout:
+                orientation: 'vertical'
+                padding: "20dp"
+                spacing: "15dp"
+                adaptive_height: True
+
+                MDCard:
+                    orientation: 'vertical'
+                    padding: "15dp"
+                    spacing: "12dp"
+                    radius: [20, ]
+                    adaptive_height: True
+                    md_bg_color: 1, 1, 1, 0.6
+                    line_color: (0.8, 0.1, 0.4, 0.2)
+                    line_width: 1.2
+
+                    MDLabel:
+                        text: "Technical Parameters"
+                        font_style: "H6"
+                        theme_text_color: "Custom"
+                        text_color: (0.8, 0.1, 0.4, 1)
+                        halign: "center"
+
+                    # رجعنا كل الـ Inputs الـ 7 المطلوبة للمعادلات
+                    MDTextField:
+                        id: f2
+                        hint_text: "F2 (Front Load Force)"
+                        mode: "rectangle"
+                        line_color_focus: (0.8, 0.1, 0.4, 1)
+                        input_filter: "float"
+
+                    MDTextField:
+                        id: f3
+                        hint_text: "F3 (Incline Load Force)"
+                        mode: "rectangle"
+                        line_color_focus: (0.8, 0.1, 0.4, 1)
+                        input_filter: "float"
+
+                    MDTextField:
+                        id: wb
+                        hint_text: "WB (Wheelbase)"
+                        mode: "rectangle"
+                        line_color_focus: (0.8, 0.1, 0.4, 1)
+                        input_filter: "float"
+
+                    MDTextField:
+                        id: w
+                        hint_text: "W (Total Weight)"
+                        mode: "rectangle"
+                        line_color_focus: (0.8, 0.1, 0.4, 1)
+                        input_filter: "float"
+
+                    MDTextField:
+                        id: tr
+                        hint_text: "Tr (Track Width)"
+                        mode: "rectangle"
+                        line_color_focus: (0.8, 0.1, 0.4, 1)
+                        input_filter: "float"
+
+                    MDTextField:
+                        id: b
+                        hint_text: "b (Distance Offset)"
+                        mode: "rectangle"
+                        line_color_focus: (0.8, 0.1, 0.4, 1)
+                        input_filter: "float"
+
+                    MDTextField:
+                        id: alpha
+                        hint_text: "Alpha (Incline Angle °)"
+                        mode: "rectangle"
+                        line_color_focus: (0.8, 0.1, 0.4, 1)
+                        input_filter: "float"
+
+                MDRaisedButton:
+                    text: "CALCULATE RESULTS"
+                    size_hint_x: 1
+                    height: "50dp"
+                    md_bg_color: (0.8, 0.1, 0.4, 1)
+                    on_release: root.compute()
+
+                MDCard:
+                    orientation: 'vertical'
+                    padding: "20dp"
+                    adaptive_height: True
+                    radius: [20, ]
+                    md_bg_color: 0.8, 0.1, 0.4, 0.1
+                    line_color: (0.8, 0.1, 0.4, 0.3)
+                    
+                    MDLabel:
+                        id: res_label
+                        text: "Xcg: - | Ycg: - | Zcg: -"
+                        halign: "center"
+                        font_style: "Subtitle1"
+                        theme_text_color: "Custom"
+                        text_color: (0.8, 0.1, 0.4, 1)
+                        bold: True
+
+<SignUpScreen>:
+    name: 'signup'
+    canvas.before:
+        Color:
+            rgba: (1, 0.75, 0.8, 1)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    MDCard:
+        size_hint: .85, .75
+        pos_hint: {"center_x": .5, "center_y": .5}
+        padding: "20dp"
+        orientation: 'vertical'
+        spacing: "10dp"
+        radius: [25, ]
+        md_bg_color: 1, 1, 1, 0.5
+
+        MDLabel:
+            text: "Create Account"
+            halign: "center"
+            font_style: "H5"
+            theme_text_color: "Custom"
+            text_color: (0.8, 0.1, 0.4, 1)
+
+        MDTextField:
+            id: new_user
+            hint_text: "Username"
+        MDTextField:
+            id: new_pw
+            hint_text: "Password"
+            password: True
+        MDTextField:
+            id: admin_key
+            hint_text: "Admin Key (1234)"
+
+        MDRaisedButton:
+            text: "SIGN UP"
+            size_hint_x: 1
+            md_bg_color: (0.8, 0.1, 0.4, 1)
+            on_release: root.register_user()
+
+        MDTextButton:
+            text: "Back"
+            pos_hint: {"center_x": .5}
+            on_release: root.manager.current = 'login'
+
+<AdminScreen>:
+    name: 'admin'
+    MDBoxLayout:
+        orientation: 'vertical'
+        MDTopAppBar:
+            title: "Admin Dashboard"
+            md_bg_color: (0.8, 0.1, 0.4, 1)
+            left_action_items: [["arrow-left", lambda x: app.go_back()]]
+        MDLabel:
+            id: admin_info
+            text: "Statistics Loading..."
+            halign: "center"
+            theme_text_color: "Custom"
+            text_color: (0.8, 0.1, 0.4, 1)

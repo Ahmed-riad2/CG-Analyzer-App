@@ -1,19 +1,26 @@
 name: Build APK
-on: [push]
+on: [push, pull_request]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      # تحديث لـ v4 لضمان التوافق
+      - uses: actions/checkout@v4
+
       - name: Build with Buildozer
-        uses: ArtemSerebrenninkov/buildozer-action@v1
+        uses: kneerunjun/buildozer-action@v1.3.0
         with:
           buildozer_version: master
           python_version: 3.10
+          # التأكد من بناء النسخة للأندرويد
           command: buildozer -v android debug
+          repository_display_name: CG Analyzer
+
+      # تحديث لـ v4 لحل مشكلة الـ Deprecation
       - name: Upload APK
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: CG-Analyzer-Package
+          # المسار اللي بيخرج فيه ملف الـ APK
           path: bin/*.apk
